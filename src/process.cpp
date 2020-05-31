@@ -15,7 +15,7 @@ Process::Process(int process_id):process_id(process_id)
 
 }
 // TODO: Return this process's ID
-int Process::Pid() 
+int Process::Pid() const
 { 
     return process_id; 
 }
@@ -36,18 +36,31 @@ float Process::CpuUtilization()
 // TODO: Return the command that generated this process
 string Process::Command() 
 { 
-    return string(); 
+    return LinuxParser::Command(process_id); 
 }
 
 // TODO: Return this process's memory utilization
-string Process::Ram() { return string(); }
+string Process::Ram() 
+{ 
+    return LinuxParser::Ram(process_id); 
+}
 
 // TODO: Return the user (name) that generated this process
-string Process::User() { return string(); }
+string Process::User() 
+{ 
+    return LinuxParser::User(process_id); 
+}
 
 // TODO: Return the age of this process (in seconds)
-long int Process::UpTime() { return 0; }
+long int Process::UpTime()
+{ 
+    return LinuxParser::UpTime(process_id); 
+}
 
 // TODO: Overload the "less than" comparison operator for Process objects
 // REMOVE: [[maybe_unused]] once you define the function
-bool Process::operator<(Process const& a[[maybe_unused]]) const { return true; }
+bool Process::operator<(Process const& a) const 
+{ 
+    int a_process_id = a.Pid();
+    return LinuxParser::ActiveJiffies(process_id) > LinuxParser::ActiveJiffies(a_process_id); 
+}
