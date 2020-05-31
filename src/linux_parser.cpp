@@ -75,6 +75,18 @@ float ConvertLineToMemoryValue(string line)
   return stof(memory_value);
 }
 
+float ExstractValueFromLine(string line, int value_index)
+{
+  string value;
+  std::istringstream linestream(line);
+  while (value_index >= 0)
+  {
+    linestream >> value;
+    value_index -= 1;
+  }
+  return stof(value);
+}
+
 float LinuxParser::MemoryUtilization() 
 {
   float total_memory, free_memory;
@@ -85,17 +97,30 @@ float LinuxParser::MemoryUtilization()
     std::getline(stream, line);
     total_memory = ConvertLineToMemoryValue(line);
     std::getline(stream, line);
-    free_memory = ConvertLineToMemoryValue(line);
+    free_memory = ExstractValueFromLine(line, 1);
   }
   float memory_utilization_ratio = (total_memory - free_memory) / total_memory;
   return memory_utilization_ratio; 
 }
 
 // TODO: Read and return the system uptime
-long LinuxParser::UpTime() { return 0; }
+long LinuxParser::UpTime() 
+{
+  string line;
+  std::ifstream stream(kProcDirectory + kUptimeFilename);
+  if (stream.is_open()) 
+  {
+    std::getline(stream, line);
+    float up_time = ExstractValueFromLine(line, 1);
+  }
+  return 0; 
+}
 
 // TODO: Read and return the number of jiffies for the system
-long LinuxParser::Jiffies() { return 0; }
+long LinuxParser::Jiffies()
+{ 
+  return 0; 
+}
 
 // TODO: Read and return the number of active jiffies for a PID
 // REMOVE: [[maybe_unused]] once you define the function
