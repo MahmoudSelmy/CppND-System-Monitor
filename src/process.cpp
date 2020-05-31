@@ -29,7 +29,7 @@ float Process::CpuUtilization()
     {
         return 0.0;
     }
-    float ratio = process_jiffies / total_jiffies;
+    float ratio = (process_jiffies*1.0) / total_jiffies;
     return ratio; 
 }
 
