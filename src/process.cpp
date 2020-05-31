@@ -10,14 +10,34 @@ using std::string;
 using std::to_string;
 using std::vector;
 
+Process::Process(int process_id):process_id(process_id)
+{
+
+}
 // TODO: Return this process's ID
-int Process::Pid() { return 0; }
+int Process::Pid() 
+{ 
+    return process_id; 
+}
 
 // TODO: Return this process's CPU utilization
-float Process::CpuUtilization() { return 0; }
+float Process::CpuUtilization() 
+{
+    long process_jiffies = LinuxParser::ActiveJiffies(process_id);
+    long total_jiffies = LinuxParser::ActiveJiffies();
+    if(total_jiffies == 0)
+    {
+        return 0.0;
+    }
+    float ratio = process_jiffies / total_jiffies;
+    return ratio; 
+}
 
 // TODO: Return the command that generated this process
-string Process::Command() { return string(); }
+string Process::Command() 
+{ 
+    return string(); 
+}
 
 // TODO: Return this process's memory utilization
 string Process::Ram() { return string(); }

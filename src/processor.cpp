@@ -4,7 +4,11 @@
 float Processor::Utilization() 
 {
     long total = LinuxParser::Jiffies();
-    long idle = LinuxParser::IdleJiffies();
-    float cpu_util_ratio = (total - idle) / total;
+    if(total == 0)
+    {
+        return 0.0;
+    }
+    long active = LinuxParser::ActiveJiffies();
+    float cpu_util_ratio = active / total;
     return cpu_util_ratio;
 }
