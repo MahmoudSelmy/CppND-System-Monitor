@@ -174,7 +174,12 @@ long LinuxParser::ActiveJiffies()
 }
 
 // TODO: Read and return the number of idle jiffies for the system
-long LinuxParser::IdleJiffies() { return 0; }
+long LinuxParser::IdleJiffies() 
+{
+  auto cpu_values = LinuxParser::CpuUtilization();
+  long idle_jiffies = stol(cpu_values[kIdle_]) + stol(cpu_values[kIOwait_]); 
+  return idle_jiffies; 
+}
 
 // TODO: Read and return CPU utilization
 vector<string> LinuxParser::CpuUtilization() 
