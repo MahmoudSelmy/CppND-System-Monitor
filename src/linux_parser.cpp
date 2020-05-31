@@ -122,11 +122,11 @@ long LinuxParser::UpTime()
 long LinuxParser::Jiffies()
 { 
   auto cpu_values = LinuxParser::CpuUtilization();
-  int sum = 0;
+  long sum = 0;
 
   for (auto& j : cpu_values) 
   {
-    sum += stoi(j);
+    sum += stol(j);
   }
   return sum; 
 }
@@ -135,8 +135,32 @@ long LinuxParser::Jiffies()
 // REMOVE: [[maybe_unused]] once you define the function
 long LinuxParser::ActiveJiffies(int pid) 
 {
+  string line;
+  string key;
+  string value;
+  long sum = 0;
+  string process_path = kProcDirectory + to_string(pid) + kStatFilename;
+  std::ifstream filestream(process_path);
+  if (filestream.is_open()) 
+  {
+    std::getline(filestream, line);
+    std::istringstream linestream(line);
+    int i = 0;
+    while (linestream >> value)
+    {
+      i += 1;
+      if (i == 14 || i == 15) 
+      {
+        sum += std::stol(value);
+      }
+      if (i == 15)
+      {
+        break;
+      } 
+    }
+  }
 
-  return 0; 
+  return sum;
 }
 
 // TODO: Read and return the number of active jiffies for the system
